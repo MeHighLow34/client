@@ -1,24 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  Landing,
+  Dashboard,
+  AuthenticatePage,
+  Error,
+  ProtectedRoute,
+} from "./pages";
+
+import { SharedLayout, CreatePost, MyPosts } from "./pages/dashboard/index";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <SharedLayout />
+            </ProtectedRoute>
+          }
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <Route index element={<Dashboard />} />
+          <Route
+            path="/profile"
+            element={<h1>Adjusting Profile Settings</h1>}
+          />
+          <Route path="/createPost" element={<CreatePost />} />
+          <Route path="/myPosts" element={<MyPosts />} />
+        </Route>
+        <Route path="/authentication" element={<AuthenticatePage />} />
+        <Route path="/landing" element={<Landing />} />
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
