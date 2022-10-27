@@ -80,14 +80,16 @@ body {
   padding: 0.375rem 0.75rem;
   margin-bottom: 1rem;
   border-color: transparent;
-  border-radius: var(--borderRadius);
+  border-radius: 8px;
   text-align: center;
+  background-color: #7f2122;
+  color: wheat;
   letter-spacing: var(--letterSpacing);
 }
 
 .alert-danger {
-  color: var(--red-dark);
-  background: red;
+  color: wheat;
+  background: #7f2122;
 }
 .alert-success {
   color: var(--green-dark);

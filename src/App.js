@@ -6,7 +6,12 @@ import {
   ProtectedRoute,
 } from "./pages";
 
-import { SharedLayout, CreatePost, MyPosts } from "./pages/dashboard/index";
+import {
+  SharedLayout,
+  CreatePost,
+  MyPosts,
+  Profile,
+} from "./pages/dashboard/index";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
 function App() {
@@ -22,10 +27,7 @@ function App() {
           }
         >
           <Route index element={<Dashboard />} />
-          <Route
-            path="/profile"
-            element={<h1>Adjusting Profile Settings</h1>}
-          />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/createPost" element={<CreatePost />} />
           <Route path="/myPosts" element={<MyPosts />} />
         </Route>

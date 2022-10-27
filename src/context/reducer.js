@@ -8,6 +8,9 @@ import {
   LOGIN_USER_ERROR,
   LOGIN_USER_SUCCESS,
   TOGGLE_MENU,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from "./actions";
 
 const reducer = (state, action) => {
@@ -70,6 +73,29 @@ const reducer = (state, action) => {
   }
   if (action.type === TOGGLE_MENU) {
     return { ...state, showMenu: !state.showMenu };
+  }
+  if (action.type === UPDATE_USER_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === UPDATE_USER_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Updated Data",
+      user: action.payload.user,
+      token: action.payload.token,
+    };
+  }
+  if (action.type === UPDATE_USER_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
   }
   throw new Error(`no such action: ${action.type}`);
 };

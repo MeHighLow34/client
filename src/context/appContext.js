@@ -12,7 +12,11 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
   TOGGLE_MENU,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
 } from "./actions";
+import { Action } from "@remix-run/router";
 
 const AppContext = React.createContext();
 
@@ -30,6 +34,36 @@ const initialState = {
 };
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const authFetch = axios.create({
+    baseURL: "/api",
+    headers: {
+      Authorization: `Bearer ${state.token}`,
+    },
+  });
+
+  // authFetch.interceptors.request.use(
+  //   (config) => {
+  //     config.headers.common["Authorization"] = `Bearer ${state.token}`;
+  //     return config;
+  //   },
+  //   (error) => {
+  //     return Promise.reject(error);
+  //   }
+  // );
+  // // response interceptor
+  // authFetch.interceptors.response.use(
+  //   (response) => {
+  //     return response;
+  //   },
+  //   (error) => {
+  //     console.log(error.response);
+  //     if (error.response.status === 401) {
+  //       console.log("AUTH ERROR");
+  //     }
+  //     return Promise.reject(error);
+  //   }
+  // );
 
   function displayAlert() {
     dispatch({ type: DISPLAY_ALERT });
@@ -71,6 +105,19 @@ const AppProvider = ({ children }) => {
     }
   }
 
+  async function updateUser(currentUser) {
+    dispatch({ type: UPDATE_USER_BEGIN });
+    try {
+      const response = await authFetch.patch("/auth/updateUser", currentUser);
+      console.log(response);
+      const { user, token } = response.data;
+      dispatch({ type: UPDATE_USER_SUCCESS, payload: { user, token } });
+      addUserToLocalStorage({ user, token });
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   function addUserToLocalStorage({ user, token }) {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", token);
@@ -86,7 +133,14 @@ const AppProvider = ({ children }) => {
   }
   return (
     <AppContext.Provider
-      value={{ ...state, displayAlert, registerUser, loginUser, toggleMenu }}
+      value={{
+        ...state,
+        displayAlert,
+        registerUser,
+        loginUser,
+        toggleMenu,
+        updateUser,
+      }}
     >
       {children}
     </AppContext.Provider>
