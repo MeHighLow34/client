@@ -11,7 +11,10 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  LOGOUT_USER,
 } from "./actions";
+
+import { initialState } from "./appContext";
 
 const reducer = (state, action) => {
   if (action.type === DISPLAY_ALERT) {
@@ -96,6 +99,9 @@ const reducer = (state, action) => {
       alertType: "danger",
       alertText: action.payload.msg,
     };
+  }
+  if (action.type === LOGOUT_USER) {
+    return { ...initialState, user: null, token: null, location: null };
   }
   throw new Error(`no such action: ${action.type}`);
 };

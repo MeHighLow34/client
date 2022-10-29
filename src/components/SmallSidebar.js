@@ -4,9 +4,10 @@ import { useAppContext } from "../context/appContext";
 import { AiFillCloseCircle } from "react-icons/ai";
 import { Logo } from "../components";
 import NavLinks from "./NavLinks";
+import { ImUser } from "react-icons/im";
 
 const SmallSidebar = () => {
-  const { showMenu, toggleMenu } = useAppContext();
+  const { showMenu, toggleMenu, user, logoutUser } = useAppContext();
   return (
     <Wrapper>
       <div
@@ -29,6 +30,20 @@ const SmallSidebar = () => {
             <h1>Menu</h1>
           </div>
           <NavLinks />
+          <div className="logOut">
+            <div className="user">
+              <ImUser />
+              <h4>{user.name}</h4>
+            </div>
+            <button
+              className="logOutBtn"
+              onClick={() => {
+                logoutUser();
+              }}
+            >
+              LogOut
+            </button>
+          </div>
         </div>
       </div>
     </Wrapper>
@@ -52,6 +67,29 @@ const Wrapper = styled.aside`
     opacity: 1;
   }
 
+  .logOut {
+    margin-top: 150px;
+    text-align: center;
+  }
+  .logOutBtn {
+    background-color: #7f2122;
+    border: none;
+    color: wheat;
+    padding: 5px;
+    padding-left: 25px;
+    padding-right: 25px;
+    border-radius: 8px;
+  }
+  .user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    //   background-color: wheat;
+    border-radius: 8px;
+    padding-left: 25px;
+    padding-right: 25px;
+    gap: 15px;
+  }
   .content {
     display: flex;
     flex-direction: column;

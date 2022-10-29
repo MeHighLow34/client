@@ -15,6 +15,7 @@ import {
   UPDATE_USER_BEGIN,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  LOGOUT_USER,
 } from "./actions";
 import { Action } from "@remix-run/router";
 
@@ -114,8 +115,12 @@ const AppProvider = ({ children }) => {
       dispatch({ type: UPDATE_USER_SUCCESS, payload: { user, token } });
       addUserToLocalStorage({ user, token });
     } catch (error) {
-      console.log(error);
+      dispatch({
+        type: UPDATE_USER_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
     }
+    clearAlert();
   }
 
   function addUserToLocalStorage({ user, token }) {
@@ -128,6 +133,10 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem("user");
   }
 
+  function logoutUser() {
+    dispatch({ type: LOGOUT_USER });
+    removeUserFromLocalStorage();
+  }
   function toggleMenu() {
     dispatch({ type: TOGGLE_MENU });
   }
@@ -140,6 +149,7 @@ const AppProvider = ({ children }) => {
         loginUser,
         toggleMenu,
         updateUser,
+        logoutUser,
       }}
     >
       {children}
