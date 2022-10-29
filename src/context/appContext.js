@@ -16,6 +16,11 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
   LOGOUT_USER,
+  HANDLE_CHANGE,
+  CLEAR_POST,
+  CREATE_POST_BEGIN,
+  CREATE_POST_SUCCESS,
+  CREATE_POST_ERROR,
 } from "./actions";
 import { Action } from "@remix-run/router";
 
@@ -32,6 +37,12 @@ const initialState = {
   user: JSON.parse(user) || null,
   token: token || null,
   showMenu: false,
+  isEditing: false,
+  editPostId: "",
+  title: "",
+  content: "",
+  moodOptions: ["angry", "great", "sad", "neutral"],
+  mood: "neutral",
 };
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -123,6 +134,28 @@ const AppProvider = ({ children }) => {
     clearAlert();
   }
 
+  async function createPost() {
+    dispatch({ type: CREATE_POST_BEGIN });
+    try {
+      const { title, content, mood } = state;
+      const post = await authFetch.post("/posts/createPost", {
+        title,
+        content,
+        mood,
+      });
+      dispatch({ type: CREATE_POST_SUCCESS });
+      clearPost();
+    } catch (error) {
+      dispatch({
+        type: CREATE_POST_ERROR,
+        payload: { msg: error.response.data.msg },
+      });
+    }
+    clearAlert();
+  }
+  function clearPost() {
+    dispatch({ type: CLEAR_POST });
+  }
   function addUserToLocalStorage({ user, token }) {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", token);
@@ -140,6 +173,10 @@ const AppProvider = ({ children }) => {
   function toggleMenu() {
     dispatch({ type: TOGGLE_MENU });
   }
+
+  function handleChanges({ name, value }) {
+    dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
+  }
   return (
     <AppContext.Provider
       value={{
@@ -150,6 +187,8 @@ const AppProvider = ({ children }) => {
         toggleMenu,
         updateUser,
         logoutUser,
+        handleChanges,
+        createPost,
       }}
     >
       {children}

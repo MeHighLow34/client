@@ -12,6 +12,11 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
   LOGOUT_USER,
+  HANDLE_CHANGE,
+  CLEAR_POST,
+  CREATE_POST_BEGIN,
+  CREATE_POST_ERROR,
+  CREATE_POST_SUCCESS,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -102,6 +107,33 @@ const reducer = (state, action) => {
   }
   if (action.type === LOGOUT_USER) {
     return { ...initialState, user: null, token: null, location: null };
+  }
+  if (action.type === HANDLE_CHANGE) {
+    return { ...state, [action.payload.name]: action.payload.value };
+  }
+  if (action.type === CLEAR_POST) {
+    return { ...state, title: "", content: "", mood: "neutral" };
+  }
+  if (action.type === CREATE_POST_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === CREATE_POST_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Post Created!",
+    };
+  }
+  if (action.type === CREATE_POST_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
   }
   throw new Error(`no such action: ${action.type}`);
 };
