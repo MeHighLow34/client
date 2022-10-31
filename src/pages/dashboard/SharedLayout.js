@@ -39,6 +39,7 @@ const Wrapper = styled.main`
     padding: 20px;
     background-color: #7f2122;
     position: static;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   }
   .toggle-btn {
     background: transparent;

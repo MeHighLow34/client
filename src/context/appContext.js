@@ -21,6 +21,10 @@ import {
   CREATE_POST_BEGIN,
   CREATE_POST_SUCCESS,
   CREATE_POST_ERROR,
+  GET_POSTS_BEGIN,
+  GET_POSTS_SUCCESS,
+  GET_ALL_POSTS_BEGIN,
+  GET_ALL_POSTS_SUCCESS,
 } from "./actions";
 import { Action } from "@remix-run/router";
 
@@ -43,6 +47,9 @@ const initialState = {
   content: "",
   moodOptions: ["angry", "great", "sad", "neutral"],
   mood: "neutral",
+  posts: [],
+  totalPosts: 0,
+  allPosts: [],
 };
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -143,6 +150,7 @@ const AppProvider = ({ children }) => {
         content,
         mood,
       });
+      console.log(post);
       dispatch({ type: CREATE_POST_SUCCESS });
       clearPost();
     } catch (error) {
@@ -152,6 +160,27 @@ const AppProvider = ({ children }) => {
       });
     }
     clearAlert();
+  }
+
+  async function getMyPosts() {
+    dispatch({ type: GET_POSTS_BEGIN });
+    try {
+      const posts = await authFetch.get("/posts/getMyPosts");
+      dispatch({ type: GET_POSTS_SUCCESS, payload: { posts } });
+    } catch (error) {
+      console.log(error.response);
+      logoutUser();
+    }
+  }
+  async function getAllPosts() {
+    dispatch({ type: GET_ALL_POSTS_BEGIN });
+    try {
+      const allPosts = await authFetch.get("/posts/getAllPosts");
+      dispatch({ type: GET_ALL_POSTS_SUCCESS, payload: allPosts.data });
+    } catch (error) {
+      console.log(error.response);
+      logoutUser();
+    }
   }
   function clearPost() {
     dispatch({ type: CLEAR_POST });
@@ -189,6 +218,8 @@ const AppProvider = ({ children }) => {
         logoutUser,
         handleChanges,
         createPost,
+        getMyPosts,
+        getAllPosts,
       }}
     >
       {children}

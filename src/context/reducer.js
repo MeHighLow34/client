@@ -17,6 +17,10 @@ import {
   CREATE_POST_BEGIN,
   CREATE_POST_ERROR,
   CREATE_POST_SUCCESS,
+  GET_POSTS_BEGIN,
+  GET_POSTS_SUCCESS,
+  GET_ALL_POSTS_BEGIN,
+  GET_ALL_POSTS_SUCCESS,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -134,6 +138,22 @@ const reducer = (state, action) => {
       alertType: "danger",
       alertText: action.payload.msg,
     };
+  }
+  if (action.type === GET_POSTS_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_POSTS_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      posts: action.payload.posts.data.posts,
+    };
+  }
+  if (action.type === GET_ALL_POSTS_BEGIN) {
+    return { ...state, isLoading: true, showAlert: false };
+  }
+  if (action.type === GET_ALL_POSTS_SUCCESS) {
+    return { ...state, isLoading: false, allPosts: action.payload.all };
   }
   throw new Error(`no such action: ${action.type}`);
 };
