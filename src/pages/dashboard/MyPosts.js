@@ -37,6 +37,10 @@ const MyPosts = () => {
 
 const Wrapper = styled.main`
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 `;
 
 export default MyPosts;

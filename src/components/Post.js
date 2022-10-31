@@ -68,6 +68,10 @@ const Wrapper = styled.div`
     text-decoration: none;
     font-size: 0.65rem;
   }
+  @media screen and (min-width: 495px) {
+    max-width: 300px;
+    text-align: center;
+  }
 `;
 
 export default Post;

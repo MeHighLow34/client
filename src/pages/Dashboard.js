@@ -32,5 +32,11 @@ const Dashboard = () => {
 
 const Wrapper = styled.div`
   overflow-x: hidden;
+  @media screen and (min-width: 495px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
 `;
 export default Dashboard;
