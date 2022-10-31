@@ -1,7 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { useAppContext } from "../context/appContext";
 
-const Post = ({ title, content, creator, mood, isMine }) => {
+const Post = ({ title, content, creator, mood, isMine, id }) => {
+  const { editPost, deletePost } = useAppContext();
   return (
     <Wrapper>
       <h3>{title}</h3>
@@ -10,8 +13,24 @@ const Post = ({ title, content, creator, mood, isMine }) => {
       <h6>Created by: {creator || "Teodisius"}</h6>
       {isMine ? (
         <footer>
-          <button className="btn success">edit</button>
-          <button className="btn">delete</button>
+          <Link
+            to="/createPost"
+            className="btn success"
+            onClick={() => {
+              editPost(id);
+            }}
+          >
+            Edit
+          </Link>
+
+          <button
+            className="btn"
+            onClick={() => {
+              deletePost(id);
+            }}
+          >
+            delete
+          </button>
         </footer>
       ) : null}
     </Wrapper>
@@ -46,6 +65,8 @@ const Wrapper = styled.div`
   }
   .success {
     background-color: green;
+    text-decoration: none;
+    font-size: 0.65rem;
   }
 `;
 

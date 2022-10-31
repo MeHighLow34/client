@@ -14,11 +14,18 @@ const CreatePost = () => {
     handleChanges,
     createPost,
     isLoading,
+    isEditing,
+    submitEditPost,
   } = useAppContext();
   function handleSubmit(e) {
     e.preventDefault();
     if (!title || !content) {
       displayAlert();
+      return;
+    }
+    if (isEditing) {
+      submitEditPost();
+      return;
     }
     createPost();
   }
@@ -28,7 +35,7 @@ const CreatePost = () => {
   return (
     <Wrapper>
       <form className="form" onSubmit={handleSubmit}>
-        <h2>Create a Post</h2>
+        <h2>{isEditing ? "Edit a Post" : "Create a Post"}</h2>
         {showAlert ? <Alert /> : null}
         <FormRow
           type="text"
@@ -53,7 +60,7 @@ const CreatePost = () => {
           handleChange={handleChange}
         />
         <button className="btn" type="submit" disabled={isLoading}>
-          Post
+          {isEditing ? "Edit" : "Post"}
         </button>
       </form>
     </Wrapper>

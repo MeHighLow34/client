@@ -21,6 +21,10 @@ import {
   GET_POSTS_SUCCESS,
   GET_ALL_POSTS_BEGIN,
   GET_ALL_POSTS_SUCCESS,
+  SET_EDIT_POST,
+  EDIT_POST_BEGIN,
+  EDIT_POST_SUCCESS,
+  EDIT_POST_ERROR,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -154,6 +158,34 @@ const reducer = (state, action) => {
   }
   if (action.type === GET_ALL_POSTS_SUCCESS) {
     return { ...state, isLoading: false, allPosts: action.payload.all };
+  }
+  if (action.type === SET_EDIT_POST) {
+    const editPost = state.posts.find((post) => {
+      return post._id === action.payload.id;
+    });
+    const { mood, title, content, _id } = editPost;
+    return { ...state, isEditing: true, editPostId: _id, mood, title, content };
+  }
+  if (action.type === EDIT_POST_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === EDIT_POST_SUCCESS) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "success",
+      alertText: "Updated Post!",
+    };
+  }
+  if (action.type === EDIT_POST_ERROR) {
+    return {
+      ...state,
+      isLoading: false,
+      showAlert: true,
+      alertType: "danger",
+      alertText: action.payload.msg,
+    };
   }
   throw new Error(`no such action: ${action.type}`);
 };

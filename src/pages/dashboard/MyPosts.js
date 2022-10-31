@@ -22,6 +22,7 @@ const MyPosts = () => {
         return (
           <Post
             key={post._id}
+            id={post._id}
             title={post.title}
             content={post.content}
             mood={post.mood}

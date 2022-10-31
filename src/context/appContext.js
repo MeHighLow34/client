@@ -25,6 +25,10 @@ import {
   GET_POSTS_SUCCESS,
   GET_ALL_POSTS_BEGIN,
   GET_ALL_POSTS_SUCCESS,
+  SET_EDIT_POST,
+  EDIT_POST_BEGIN,
+  EDIT_POST_SUCCESS,
+  EDIT_POST_ERROR,
 } from "./actions";
 import { Action } from "@remix-run/router";
 
@@ -182,6 +186,39 @@ const AppProvider = ({ children }) => {
       logoutUser();
     }
   }
+
+  async function editPost(id) {
+    dispatch({ type: SET_EDIT_POST, payload: { id } });
+  }
+
+  async function submitEditPost() {
+    dispatch({ type: EDIT_POST_BEGIN });
+    try {
+      const { title, content, mood } = state;
+      const updatedPost = await authFetch.patch(
+        `/posts/modifyPost/${state.editPostId}`,
+        {
+          title,
+          content,
+          mood,
+        }
+      );
+      dispatch({ type: EDIT_POST_SUCCESS });
+    } catch (error) {
+      console.log(error.response);
+      dispatch({ type: EDIT_POST_ERROR, payload: error.response.data.msg });
+    }
+    clearAlert();
+  }
+  async function deletePost(id) {
+    try {
+      const deletedMessage = await authFetch.delete(`/posts/modifyPost/${id}`);
+      getMyPosts();
+    } catch (error) {
+      logoutUser();
+    }
+  }
+
   function clearPost() {
     dispatch({ type: CLEAR_POST });
   }
@@ -220,6 +257,9 @@ const AppProvider = ({ children }) => {
         createPost,
         getMyPosts,
         getAllPosts,
+        editPost,
+        deletePost,
+        submitEditPost,
       }}
     >
       {children}
