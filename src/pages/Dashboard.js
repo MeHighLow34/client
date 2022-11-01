@@ -23,6 +23,7 @@ const Dashboard = () => {
             creator={post.posterName}
             mood={post.mood}
             id={post._id}
+            creatorId={post.createdBy}
           />
         );
       })}

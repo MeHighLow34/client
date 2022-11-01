@@ -3,14 +3,18 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAppContext } from "../context/appContext";
 
-const Post = ({ title, content, creator, mood, isMine, id }) => {
+const Post = ({ title, content, creator, mood, isMine, id, creatorId }) => {
   const { editPost, deletePost } = useAppContext();
   return (
     <Wrapper>
       <h3>{title}</h3>
       <p> {content}</p>
       <h5>{`mood ${mood}`}</h5>
-      <h6>Created by: {creator || "Teodisius"}</h6>
+      {isMine ? null : (
+        <Link to={`/profiles/profileInfo/${creatorId}`} className="profileLink">
+          Created by: <strong> {creator || "Teodisius"}</strong>
+        </Link>
+      )}
       {isMine ? (
         <footer>
           <Link
@@ -53,6 +57,7 @@ const Wrapper = styled.div`
 
   h6 {
     color: #cac198;
+    font-size: 0.8rem;
   }
   button {
     font-size: 0.65rem;
@@ -67,6 +72,14 @@ const Wrapper = styled.div`
     background-color: green;
     text-decoration: none;
     font-size: 0.65rem;
+  }
+  strong {
+    color: #d32929;
+  }
+  .profileLink {
+    text-decoration: none;
+    font-size: 0.8rem;
+    color: #7f2122;
   }
   @media screen and (min-width: 495px) {
     max-width: 300px;

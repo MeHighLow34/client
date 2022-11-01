@@ -61,7 +61,7 @@ const Wrapper = styled.main`
     bottom: 0;
     width: 100%;
     height: 2.5rem;
-    background-color: #2b2d42;
+    //background-color: #2b2d42;
     color: wheat;
     text-align: center;
     display: grid;

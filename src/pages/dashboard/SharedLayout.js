@@ -31,7 +31,7 @@ const SharedLayout = () => {
 
 const Wrapper = styled.main`
   background-color: #fff5e6;
-  height: 100vh;
+  min-height: 100vh;
   .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -45,6 +45,7 @@ const Wrapper = styled.main`
     background: transparent;
     border-color: transparent;
     color: #facd1e;
+    cursor: pointer;
   }
   @media screen and (max-width: 495px) {
     .dashboard-header h1 {

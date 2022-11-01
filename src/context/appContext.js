@@ -29,6 +29,8 @@ import {
   EDIT_POST_BEGIN,
   EDIT_POST_SUCCESS,
   EDIT_POST_ERROR,
+  GET_PROFILE_ERROR,
+  GET_PROFILE_SUCCESS,
 } from "./actions";
 import { Action } from "@remix-run/router";
 
@@ -54,6 +56,7 @@ const initialState = {
   posts: [],
   totalPosts: 0,
   allPosts: [],
+  profileUser: null,
 };
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -219,9 +222,22 @@ const AppProvider = ({ children }) => {
     }
   }
 
+  async function getProfile(id) {
+    dispatch({ type: GET_ALL_POSTS_BEGIN });
+    try {
+      const response = await axios.post("/api/profiles/getProfile", { id });
+      const { name, lastName, location } = response.data.user;
+      const profileUser = { name, lastName, location };
+      dispatch({ type: GET_PROFILE_SUCCESS, payload: { profileUser } });
+    } catch (error) {
+      console.log(error);
+      dispatch({ type: GET_PROFILE_ERROR });
+    }
+  }
   function clearPost() {
     dispatch({ type: CLEAR_POST });
   }
+
   function addUserToLocalStorage({ user, token }) {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("token", token);
@@ -260,6 +276,7 @@ const AppProvider = ({ children }) => {
         editPost,
         deletePost,
         submitEditPost,
+        getProfile,
       }}
     >
       {children}

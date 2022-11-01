@@ -79,6 +79,7 @@ const Wrapper = styled.aside`
     padding-left: 25px;
     padding-right: 25px;
     border-radius: 8px;
+    cursor: pointer;
   }
   .user {
     display: flex;
@@ -116,6 +117,7 @@ const Wrapper = styled.aside`
     top: 25px;
     background: transparent;
     border-color: transparent;
+    cursor: pointer;
   }
   .links {
     display: flex;

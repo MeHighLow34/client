@@ -25,6 +25,9 @@ import {
   EDIT_POST_BEGIN,
   EDIT_POST_SUCCESS,
   EDIT_POST_ERROR,
+  GET_PROFILE_BEGIN,
+  GET_PROFILE_ERROR,
+  GET_PROFILE_SUCCESS,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -186,6 +189,19 @@ const reducer = (state, action) => {
       alertType: "danger",
       alertText: action.payload.msg,
     };
+  }
+  if (action.type === GET_PROFILE_BEGIN) {
+    return { ...state, isLoading: true };
+  }
+  if (action.type === GET_PROFILE_SUCCESS) {
+    return {
+      ...state,
+      profileUser: action.payload.profileUser,
+      isLoading: false,
+    };
+  }
+  if (action.type === GET_PROFILE_ERROR) {
+    return { ...state, isLoading: false };
   }
   throw new Error(`no such action: ${action.type}`);
 };

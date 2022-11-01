@@ -11,6 +11,7 @@ import {
   CreatePost,
   MyPosts,
   Profile,
+  ProfileInfo,
 } from "./pages/dashboard/index";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 
@@ -30,6 +31,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/createPost" element={<CreatePost />} />
           <Route path="/myPosts" element={<MyPosts />} />
+          <Route path="/profiles/profileInfo/:id" element={<ProfileInfo />} />
         </Route>
         <Route path="/authentication" element={<AuthenticatePage />} />
         <Route path="/landing" element={<Landing />} />
