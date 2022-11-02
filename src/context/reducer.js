@@ -28,6 +28,7 @@ import {
   GET_PROFILE_BEGIN,
   GET_PROFILE_ERROR,
   GET_PROFILE_SUCCESS,
+  NO_MORE_POSTS,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -160,7 +161,7 @@ const reducer = (state, action) => {
     return { ...state, isLoading: true, showAlert: false };
   }
   if (action.type === GET_ALL_POSTS_SUCCESS) {
-    return { ...state, isLoading: false, allPosts: action.payload.all };
+    return { ...state, isLoading: false, allPosts: action.payload };
   }
   if (action.type === SET_EDIT_POST) {
     const editPost = state.posts.find((post) => {
@@ -202,6 +203,9 @@ const reducer = (state, action) => {
   }
   if (action.type === GET_PROFILE_ERROR) {
     return { ...state, isLoading: false };
+  }
+  if (action.type === NO_MORE_POSTS) {
+    return { ...state, noMorePosts: true };
   }
   throw new Error(`no such action: ${action.type}`);
 };

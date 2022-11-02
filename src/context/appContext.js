@@ -31,6 +31,7 @@ import {
   EDIT_POST_ERROR,
   GET_PROFILE_ERROR,
   GET_PROFILE_SUCCESS,
+  NO_MORE_POSTS,
 } from "./actions";
 import { Action } from "@remix-run/router";
 
@@ -51,11 +52,13 @@ const initialState = {
   editPostId: "",
   title: "",
   content: "",
+  image: null,
   moodOptions: ["angry", "great", "sad", "neutral"],
   mood: "neutral",
   posts: [],
   totalPosts: 0,
   allPosts: [],
+  noMorePosts: false,
   profileUser: null,
 };
 const AppProvider = ({ children }) => {
@@ -148,23 +151,41 @@ const AppProvider = ({ children }) => {
     clearAlert();
   }
 
-  async function createPost() {
+  async function createPost(image) {
     dispatch({ type: CREATE_POST_BEGIN });
     try {
       const { title, content, mood } = state;
+      let imageUrl = "";
+      if (image) {
+        try {
+          const formData = new FormData();
+          formData.append("file", image);
+          formData.append("upload_preset", "Zr4u7x!A");
+          const dataRes = await axios.post(
+            "https://api.cloudinary.com/v1_1/dtgdu6x8j/image/upload",
+            formData
+          );
+          imageUrl = dataRes.data.url;
+        } catch (error) {
+          console.log(error);
+        }
+      }
       const post = await authFetch.post("/posts/createPost", {
         title,
         content,
         mood,
+        imageUrl,
       });
       console.log(post);
       dispatch({ type: CREATE_POST_SUCCESS });
       clearPost();
     } catch (error) {
+      //  console.log(error);
       dispatch({
         type: CREATE_POST_ERROR,
         payload: { msg: error.response.data.msg },
       });
+      console.log(error.response);
     }
     clearAlert();
   }
@@ -179,11 +200,23 @@ const AppProvider = ({ children }) => {
       logoutUser();
     }
   }
-  async function getAllPosts() {
+  async function getAllPosts(skip) {
     dispatch({ type: GET_ALL_POSTS_BEGIN });
     try {
-      const allPosts = await authFetch.get("/posts/getAllPosts");
-      dispatch({ type: GET_ALL_POSTS_SUCCESS, payload: allPosts.data });
+      const allPosts = await authFetch.get(`/posts/getAllPosts?skip=${skip}`);
+      const newPosts = allPosts.data.all;
+      let allPostData;
+      if (state.allPosts.length != 0) {
+        let oldPosts = state.allPosts;
+        if (newPosts.length === 0) {
+          dispatch({ type: NO_MORE_POSTS });
+        }
+        allPostData = oldPosts.concat(newPosts);
+      } else {
+        allPostData = newPosts;
+      }
+
+      dispatch({ type: GET_ALL_POSTS_SUCCESS, payload: allPostData });
     } catch (error) {
       console.log(error.response);
       logoutUser();

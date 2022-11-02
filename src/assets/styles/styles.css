@@ -94,3 +94,9 @@ body {
   color: var(--green-dark);
   background: green;
 }
+
+.post-image {
+  width: 250px;
+  border: 2px solid #facd1e;
+  margin-bottom: 15px;
+}

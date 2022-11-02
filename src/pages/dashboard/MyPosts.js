@@ -4,12 +4,15 @@ import { Post } from "../../components";
 import styled from "styled-components";
 
 const MyPosts = () => {
-  const { getMyPosts, posts, totalPosts } = useAppContext();
+  const { getMyPosts, posts, totalPosts, isLoading } = useAppContext();
   useEffect(() => {
     getMyPosts();
   }, []);
 
-  if (posts.length === 0) {
+  if (isLoading) {
+    return <p> loading motherfucker</p>;
+  }
+  if (posts.length === 0 && isLoading == false) {
     return (
       <Wrapper>
         <h2>You haven't posted anything</h2>
@@ -27,6 +30,7 @@ const MyPosts = () => {
             content={post.content}
             mood={post.mood}
             creator={post.posterName}
+            imageUrl={post.imageUrl}
             isMine={true}
           />
         );

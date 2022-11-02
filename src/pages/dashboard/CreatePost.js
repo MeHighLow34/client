@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Logo, FormRow, Alert, FormRowSelect } from "../../components";
 import { useAppContext } from "../../context/appContext";
@@ -19,6 +19,7 @@ const CreatePost = () => {
     submitEditPost,
   } = useAppContext();
 
+  const [image, setImage] = useState();
   // this.inputButton = React.createRef();
   //  this.inputText = React.createRef();
 
@@ -32,7 +33,7 @@ const CreatePost = () => {
       submitEditPost();
       return;
     }
-    createPost();
+    createPost(image);
   }
   function handleChange(e) {
     handleChanges({ name: e.target.name, value: e.target.value });
@@ -67,33 +68,37 @@ const CreatePost = () => {
           list={moodOptions}
           handleChange={handleChange}
         />
-        Image
-        <div className="upload-c">
-          <input
-            type="file"
-            hidden="hidden"
-            ref={hiddenFileInput}
-            onChange={() => {
-              if (hiddenFileInput.current.value) {
-                customText.current.innerText =
-                  hiddenFileInput.current.value.slice(12);
-                console.log(hiddenFileInput.current.value);
-              } else {
-                customText.current.innerHTML = "No file chosen, yet.";
-              }
-            }}
-          />
-          <button
-            type="button"
-            className="btn upload"
-            onClick={() => {
-              hiddenFileInput.current.click();
-            }}
-          >
-            <ImFolderUpload />
-          </button>
-          <span ref={customText}>No image uploaded, yet...</span>
-        </div>
+        {isEditing ? null : (
+          <div className="upload-c">
+            <input
+              type="file"
+              hidden="hidden"
+              ref={hiddenFileInput}
+              accept="image/*"
+              onChange={(e) => {
+                if (hiddenFileInput.current.value) {
+                  customText.current.innerText =
+                    hiddenFileInput.current.value.slice(12);
+                  console.log(hiddenFileInput.current.value);
+                } else {
+                  customText.current.innerHTML = "No file chosen, yet.";
+                }
+                setImage(e.target.files[0]);
+                console.log(e.target.files[0]);
+              }}
+            />
+            <button
+              type="button"
+              className="btn upload"
+              onClick={() => {
+                hiddenFileInput.current.click();
+              }}
+            >
+              <ImFolderUpload />
+            </button>
+            <span ref={customText}>No image uploaded, yet...</span>
+          </div>
+        )}
         <button className="btn post" type="submit" disabled={isLoading}>
           {isEditing ? "Edit" : "Post"}
         </button>

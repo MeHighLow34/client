@@ -3,12 +3,24 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useAppContext } from "../context/appContext";
 
-const Post = ({ title, content, creator, mood, isMine, id, creatorId }) => {
+const Post = ({
+  title,
+  content,
+  creator,
+  mood,
+  isMine,
+  id,
+  creatorId,
+  imageUrl,
+}) => {
   const { editPost, deletePost } = useAppContext();
   return (
     <Wrapper>
       <h3>{title}</h3>
       <p> {content}</p>
+      {imageUrl ? (
+        <img src={imageUrl} alt="impertorium" className="post-image image" />
+      ) : null}
       <h5>{`mood ${mood}`}</h5>
       {isMine ? null : (
         <Link to={`/profiles/profileInfo/${creatorId}`} className="profileLink">
@@ -42,6 +54,10 @@ const Post = ({ title, content, creator, mood, isMine, id, creatorId }) => {
 };
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
   padding: 15px;
   margin: 8px;
