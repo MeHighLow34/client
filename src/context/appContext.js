@@ -77,7 +77,8 @@ const AppProvider = ({ children }) => {
     }
   );
   const authFetch = axios.create({
-    baseURL: "https://imp-backend-production.up.railway.app/api",
+    // baseURL: "https://imp-backend-production.up.railway.app/api",
+    baseURL: "https://imperatorium.adaptable.app/api",
     headers: {
       Authorization: `Bearer ${state.token}`,
     },
@@ -241,6 +242,15 @@ const AppProvider = ({ children }) => {
             "https://imp-backend-production.up.railway.app",
         },
       });
+      // const allPosts = await axios({
+      //   method: "post",
+      //   url: `https://imperatorium.adaptable.app/api/posts/getAllPosts?skip=0`,
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     "X-API-KEY": "XXX",
+      //     Authorization: `Bearer ${state.token}`,
+      //   },
+      // });
       const newPosts = allPosts.data.all;
       let allPostData;
       if (state.allPosts.length != 0) {
