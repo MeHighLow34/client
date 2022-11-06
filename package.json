@@ -43,5 +43,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://imp-backend-production.up.railway.app"
+  "proxy": "http://localhost:5000"
 }
