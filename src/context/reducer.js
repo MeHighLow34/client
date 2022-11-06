@@ -29,6 +29,10 @@ import {
   GET_PROFILE_ERROR,
   GET_PROFILE_SUCCESS,
   NO_MORE_POSTS,
+  LIKE_A_POST,
+  MAKE_A_COMMENT,
+  LOAD_COMMENTS,
+  GET_REPLIES,
 } from "./actions";
 
 import { initialState } from "./appContext";
@@ -207,6 +211,40 @@ const reducer = (state, action) => {
   if (action.type === NO_MORE_POSTS) {
     return { ...state, noMorePosts: true };
   }
+  if (action.type === LIKE_A_POST) {
+    const likedPost = action.payload;
+    const newPosts = state.allPosts.map((post) => {
+      if (post._id === likedPost._id) {
+        post.alreadyLiked = likedPost.alreadyLiked;
+        post.likedBy = likedPost.likedBy;
+        post.likes = likedPost.likes;
+      }
+      return post;
+    });
+    return { ...state, allPosts: newPosts };
+  }
+  if (action.type === MAKE_A_COMMENT) {
+    const commentPost = action.payload;
+    const newPosts = state.allPosts.map((post) => {
+      if (post._id === commentPost._id) {
+        post.comments = commentPost.comments.filter((backendcomment) => {
+          return backendcomment;
+        });
+      }
+      return post;
+    });
+    return { ...state, allPosts: newPosts };
+  }
+  if (action.type === LOAD_COMMENTS) {
+    const filteredComments = state.allPosts.map((post) => {
+      post.comments = post.comments.filter((comment) => {
+        return comment.parentId === null;
+      });
+      return post;
+    });
+    return { ...state, allPosts: filteredComments };
+  }
+
   throw new Error(`no such action: ${action.type}`);
 };
 

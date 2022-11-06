@@ -96,7 +96,8 @@ body {
 }
 
 .post-image {
-  width: 250px;
+  height: 100%;
+  width: 100%;
   border: 2px solid #facd1e;
   margin-bottom: 15px;
 }

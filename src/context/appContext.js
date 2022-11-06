@@ -1,7 +1,6 @@
 import React, { useState, useReducer, useContext } from "react";
 import reducer from "./reducer";
 import axios from "axios";
-
 import {
   DISPLAY_ALERT,
   CLEAR_ALERT,
@@ -32,6 +31,9 @@ import {
   GET_PROFILE_ERROR,
   GET_PROFILE_SUCCESS,
   NO_MORE_POSTS,
+  LIKE_A_POST,
+  MAKE_A_COMMENT,
+  LOAD_COMMENTS,
 } from "./actions";
 import { Action } from "@remix-run/router";
 
@@ -64,8 +66,18 @@ const initialState = {
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  axios.interceptors.request.use(
+    function (config) {
+      const token = localStorage.getItem("token");
+      if (token) config.headers.Authorization = `Bearer ${token}`;
+      return config;
+    },
+    function (error) {
+      return Promise.reject(error);
+    }
+  );
   const authFetch = axios.create({
-    baseURL: "/api",
+    baseURL: "https://imp-backend-production.up.railway.app/api",
     headers: {
       Authorization: `Bearer ${state.token}`,
     },
@@ -107,7 +119,10 @@ const AppProvider = ({ children }) => {
   async function registerUser(currentUser) {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
-      const response = await axios.post("/api/auth/register", currentUser);
+      const response = await axios.post(
+        "https://imp-backend-production.up.railway.app/api/auth/register",
+        currentUser
+      );
       const { user, token } = response.data;
       dispatch({ type: REGISTER_USER_SUCCESS, payload: { user, token } });
       addUserToLocalStorage({ user, token });
@@ -122,7 +137,10 @@ const AppProvider = ({ children }) => {
   async function loginUser(currentUser) {
     dispatch({ type: LOGIN_USER_BEGIN });
     try {
-      const response = await axios.post("/api/auth/login", currentUser);
+      const response = await axios.post(
+        "https://imp-backend-production.up.railway.app/api/auth/login",
+        currentUser
+      );
       const { user, token } = response.data;
       dispatch({ type: LOGIN_USER_SUCCESS, payload: { user, token } });
       addUserToLocalStorage({ user, token });
@@ -145,7 +163,7 @@ const AppProvider = ({ children }) => {
     } catch (error) {
       dispatch({
         type: UPDATE_USER_ERROR,
-        payload: { msg: error.response.data.msg },
+        payload: { msg: error.response.data.msg, token: state.token },
       });
     }
     clearAlert();
@@ -190,6 +208,19 @@ const AppProvider = ({ children }) => {
     clearAlert();
   }
 
+  async function likeAPost(id) {
+    try {
+      const response = await authFetch.patch("/posts/likeAPost", {
+        id,
+      });
+      const { post } = response.data;
+      if (post) {
+        dispatch({ type: LIKE_A_POST, payload: post });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
   async function getMyPosts() {
     dispatch({ type: GET_POSTS_BEGIN });
     try {
@@ -203,7 +234,13 @@ const AppProvider = ({ children }) => {
   async function getAllPosts(skip) {
     dispatch({ type: GET_ALL_POSTS_BEGIN });
     try {
-      const allPosts = await authFetch.get(`/posts/getAllPosts?skip=${skip}`);
+      const allPosts = await authFetch.get(`/posts/getAllPosts?skip=${skip}`, {
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+          "Access-Control-Allow-Origin":
+            "https://imp-backend-production.up.railway.app",
+        },
+      });
       const newPosts = allPosts.data.all;
       let allPostData;
       if (state.allPosts.length != 0) {
@@ -267,6 +304,27 @@ const AppProvider = ({ children }) => {
       dispatch({ type: GET_PROFILE_ERROR });
     }
   }
+
+  async function commentOnAPost(content, postId) {
+    const response = await authFetch.patch("/posts/comment", {
+      content,
+      postId,
+    });
+    const { post } = response.data;
+    dispatch({ type: MAKE_A_COMMENT, payload: post });
+  }
+  async function replyToComment(content, postId, parentId) {
+    const response = await authFetch.patch("/posts/comment", {
+      content,
+      postId,
+      parentId,
+    });
+    const { post } = response.data;
+    dispatch({ type: MAKE_A_COMMENT, payload: post });
+  }
+  function getComments() {
+    dispatch({ type: LOAD_COMMENTS });
+  }
   function clearPost() {
     dispatch({ type: CLEAR_POST });
   }
@@ -310,6 +368,10 @@ const AppProvider = ({ children }) => {
         deletePost,
         submitEditPost,
         getProfile,
+        likeAPost,
+        commentOnAPost,
+        replyToComment,
+        getComments,
       }}
     >
       {children}

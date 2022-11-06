@@ -12,7 +12,6 @@ const Dashboard = () => {
   useEffect(() => {
     getAllPosts(skip);
   }, [skip]);
-
   function fetchMorePosts() {
     setSkip(allPosts.length);
   }
@@ -46,6 +45,9 @@ const Dashboard = () => {
                 id={post._id}
                 creatorId={post.createdBy}
                 imageUrl={post.imageUrl}
+                likes={post.likes}
+                alreadyLiked={post.alreadyLiked}
+                comments={post.comments}
               />
             );
           })}

@@ -32,6 +32,7 @@ const MyPosts = () => {
             creator={post.posterName}
             imageUrl={post.imageUrl}
             isMine={true}
+            comments={post.comments}
           />
         );
       })}

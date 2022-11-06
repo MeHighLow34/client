@@ -40,3 +40,8 @@ export const GET_PROFILE_SUCCESS = "GET_PROFILE_SUCCESS";
 export const GET_PROFILE_ERROR = "GET_PROFILE_ERROR";
 
 export const NO_MORE_POSTS = "NO_MORE_POSTS";
+
+export const LIKE_A_POST = "LIKE_A_POST";
+export const MAKE_A_COMMENT = "MAKE_A_COMMENT";
+export const LOAD_COMMENTS = "LOAD_COMMENTS";
+export const GET_REPLIES = "GET_REPLIES";
