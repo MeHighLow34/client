@@ -11,7 +11,7 @@ const SharedLayout = () => {
     <Wrapper>
       <header className="dashboard-header">
         <Logo />
-        <h1>IMPERATORIUM</h1>
+        <h1>RIM</h1>
         <button
           className="toggle-btn"
           onClick={() => {

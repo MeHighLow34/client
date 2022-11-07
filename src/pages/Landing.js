@@ -9,11 +9,11 @@ const Landing = () => {
     <Wrapper>
       <header>
         <Logo />
-        <h1>IMPERATORIUM</h1>
+        <h1>RIM</h1>
       </header>
       <div className="center">
-        <h1>Welcome to Social Network...for Emperors</h1>
-        <Link to="/authentication" className="btn">
+        <h1>Testiranje ruzni projekt za vezbu</h1>
+        <Link to="/authentication" className="btn ko">
           LogIn / Register
         </Link>
       </div>
@@ -40,6 +40,9 @@ const Wrapper = styled.main`
     width: 100%;
   }
 
+  .ko {
+    text-decoration: none;
+  }
   .center {
     display: flex;
     align-items: center;

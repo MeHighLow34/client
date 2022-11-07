@@ -66,47 +66,13 @@ const initialState = {
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  axios.interceptors.request.use(
-    function (config) {
-      const token = localStorage.getItem("token");
-      if (token) config.headers.Authorization = `Bearer ${token}`;
-      return config;
-    },
-    function (error) {
-      return Promise.reject(error);
-    }
-  );
   const authFetch = axios.create({
-    // baseURL: "https://imp-backend-production.up.railway.app/api",
     baseURL: "https://imperatorium.adaptable.app/api",
     headers: {
+      withCredentials: true,
       Authorization: `Bearer ${state.token}`,
     },
   });
-
-  // authFetch.interceptors.request.use(
-  //   (config) => {
-  //     config.headers.common["Authorization"] = `Bearer ${state.token}`;
-  //     return config;
-  //   },
-  //   (error) => {
-  //     return Promise.reject(error);
-  //   }
-  // );
-  // // response interceptor
-  // authFetch.interceptors.response.use(
-  //   (response) => {
-  //     return response;
-  //   },
-  //   (error) => {
-  //     console.log(error.response);
-  //     if (error.response.status === 401) {
-  //       console.log("AUTH ERROR");
-  //     }
-  //     return Promise.reject(error);
-  //   }
-  // );
-
   function displayAlert() {
     dispatch({ type: DISPLAY_ALERT });
     clearAlert();
@@ -139,7 +105,7 @@ const AppProvider = ({ children }) => {
     dispatch({ type: LOGIN_USER_BEGIN });
     try {
       const response = await axios.post(
-        "https://imp-backend-production.up.railway.app/api/auth/login",
+        "https://imperatorium.adaptable.app/api/auth/login",
         currentUser
       );
       const { user, token } = response.data;
@@ -235,13 +201,7 @@ const AppProvider = ({ children }) => {
   async function getAllPosts(skip) {
     dispatch({ type: GET_ALL_POSTS_BEGIN });
     try {
-      const allPosts = await authFetch.get(`/posts/getAllPosts?skip=${skip}`, {
-        headers: {
-          Authorization: `Bearer ${state.token}`,
-          "Access-Control-Allow-Origin":
-            "https://imp-backend-production.up.railway.app",
-        },
-      });
+      const allPosts = await authFetch.get(`/posts/getAllPosts?skip=${skip}`);
       // const allPosts = await axios({
       //   method: "post",
       //   url: `https://imperatorium.adaptable.app/api/posts/getAllPosts?skip=0`,
@@ -265,7 +225,7 @@ const AppProvider = ({ children }) => {
 
       dispatch({ type: GET_ALL_POSTS_SUCCESS, payload: allPostData });
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
       logoutUser();
     }
   }
@@ -305,7 +265,7 @@ const AppProvider = ({ children }) => {
   async function getProfile(id) {
     dispatch({ type: GET_ALL_POSTS_BEGIN });
     try {
-      const response = await axios.post("/api/profiles/getProfile", { id });
+      const response = await authFetch.post("/profiles/getProfile", { id });
       const { name, lastName, location } = response.data.user;
       const profileUser = { name, lastName, location };
       dispatch({ type: GET_PROFILE_SUCCESS, payload: { profileUser } });

@@ -139,7 +139,7 @@ const Wrapper = styled.div`
     color: #7f2122;
   }
   @media screen and (min-width: 495px) {
-    max-width: 300px;
+    max-width: 500px;
     text-align: center;
   }
 
