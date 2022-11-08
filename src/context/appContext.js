@@ -67,7 +67,7 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const authFetch = axios.create({
-    baseURL: "https://imperatorium.adaptable.app/api/auth/register",
+    baseURL: "https://imperatorium.adaptable.app/api",
     headers: {
       withCredentials: true,
       Authorization: `Bearer ${state.token}`,
@@ -86,7 +86,10 @@ const AppProvider = ({ children }) => {
   async function registerUser(currentUser) {
     dispatch({ type: REGISTER_USER_BEGIN });
     try {
-      const response = await axios.post("/api/auth/register", currentUser);
+      const response = await axios.post(
+        "https://imperatorium.adaptable.app/api/auth/register",
+        currentUser
+      );
       const { user, token } = response.data;
       dispatch({ type: REGISTER_USER_SUCCESS, payload: { user, token } });
       addUserToLocalStorage({ user, token });
