@@ -67,7 +67,7 @@ const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const authFetch = axios.create({
-    baseURL: "https://imperatorium.adaptable.app/api",
+    baseURL: "https://imperatorium.adaptable.app/api/auth/register",
     headers: {
       withCredentials: true,
       Authorization: `Bearer ${state.token}`,
